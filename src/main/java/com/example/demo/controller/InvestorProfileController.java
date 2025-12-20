@@ -16,24 +16,34 @@ public class InvestorProfileController {
         this.service = service;
     }
 
+    // ---------------- CREATE ----------------
     @PostMapping
     public InvestorProfile create(@RequestBody InvestorProfile investor) {
         return service.createInvestor(investor);
     }
 
+    // ---------------- GET BY ID ----------------
     @GetMapping("/{id}")
     public InvestorProfile getById(@PathVariable Long id) {
         return service.getInvestorById(id);
     }
 
+    // ---------------- GET ALL ----------------
     @GetMapping
     public List<InvestorProfile> getAll() {
         return service.getAllInvestors();
     }
 
+    // ---------------- UPDATE STATUS ----------------
     @PutMapping("/{id}/status/{active}")
     public InvestorProfile updateStatus(@PathVariable Long id,
                                         @PathVariable boolean active) {
         return service.updateInvestorStatus(id, active);
+    }
+
+    // ---------------- LOOKUP BY BUSINESS INVESTOR ID ----------------
+    @GetMapping("/lookup/{investorId}")
+    public InvestorProfile getByBusinessInvestorId(@PathVariable Long investorId) {
+        return service.getInvestorByBusinessId(investorId);
     }
 }
