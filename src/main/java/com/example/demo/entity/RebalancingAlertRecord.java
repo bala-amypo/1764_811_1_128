@@ -91,4 +91,10 @@ public class RebalancingAlertRecord {
     public void setResolved(Boolean resolved) {
         this.resolved = resolved;
     }
+
+     public void validatePercentages() {
+        if(currentPercentage == null || targetPercentage == null || currentPercentage <= targetPercentage) {
+            throw new IllegalArgumentException("currentPercentage > targetPercentage");
+        }
+    }
 }

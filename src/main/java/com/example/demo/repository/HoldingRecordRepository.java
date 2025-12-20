@@ -1,0 +1,19 @@
+package com.example.demo.repository;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.example.demo.entity.HoldingRecord;
+import com.example.demo.entity.enums.AssetClassType;
+
+@Repository
+public interface HoldingRecordRepository
+        extends JpaRepository<HoldingRecord, Long> {
+
+    List<HoldingRecord> findByInvestorId(Long investorId);
+    List<HoldingRecord> findByValueGreaterThan(Double value);
+    List<HoldingRecord> findByInvestorAndAssetClass(Long investorId, AssetClassType assetClass);
+}
+
