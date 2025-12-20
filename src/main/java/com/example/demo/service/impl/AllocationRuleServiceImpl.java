@@ -9,19 +9,16 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class AllocationRuleServiceImpl
-        implements AllocationRuleService {
+public class AllocationRuleServiceImpl implements AllocationRuleService {
 
     private final AssetClassAllocationRuleRepository repository;
 
-    public AllocationRuleServiceImpl(
-            AssetClassAllocationRuleRepository repository) {
+    public AllocationRuleServiceImpl(AssetClassAllocationRuleRepository repository) {
         this.repository = repository;
     }
 
     @Override
     public AssetClassAllocationRule createRule(AssetClassAllocationRule rule) {
-
         if (rule.getTargetPercentage() < 0 || rule.getTargetPercentage() > 100) {
             throw new IllegalArgumentException("Percentage must be between 0 and 100");
         }
@@ -30,7 +27,6 @@ public class AllocationRuleServiceImpl
 
     @Override
     public AssetClassAllocationRule updateRule(Long id, AssetClassAllocationRule updatedRule) {
-
         AssetClassAllocationRule existing = getRuleById(id);
         existing.setAssetClass(updatedRule.getAssetClass());
         existing.setTargetPercentage(updatedRule.getTargetPercentage());
@@ -52,5 +48,10 @@ public class AllocationRuleServiceImpl
     public AssetClassAllocationRule getRuleById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Rule not found"));
+    }
+
+    @Override
+    public List<AssetClassAllocationRule> getAllRules() {
+        return repository.findAll();
     }
 }
