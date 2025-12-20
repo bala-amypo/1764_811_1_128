@@ -55,8 +55,4 @@ public class AssetClassAllocationRule {
     public void setActive(Boolean active) {
         this.active = active;
     }
-    if (targetPercentage < 0 || targetPercentage > 100) {
-        throw new IllegalArgumentException("Allocation percentage must be between 0 and 100");
-    }
-
 }
