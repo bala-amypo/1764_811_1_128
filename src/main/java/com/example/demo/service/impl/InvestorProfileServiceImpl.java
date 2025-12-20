@@ -19,6 +19,16 @@ public class InvestorProfileServiceImpl implements InvestorProfileService {
 
     @Override
     public InvestorProfile createInvestor(InvestorProfile investor) {
+        // enforce uniqueness: business/investorId should be unique
+        repository.findByInvestorId(investor.getInvestorId())
+                .ifPresent(existing -> {
+                    throw new IllegalArgumentException("Investor ID already exists");
+                });
+
+        // set default flags if needed
+        if (investor.getActive() == null) {
+            investor.setActive(true);
+        }
         return repository.save(investor);
     }
 
