@@ -52,11 +52,11 @@ public class AllocationRuleController {
     }
 
     // ---------------- GET ACTIVE RULES ----------------
-    @GetMapping("/investor/{investorId}/active")
-    public ResponseEntity<List<AssetClassAllocationRule>> getActive(@PathVariable Long investorId) {
-        List<AssetClassAllocationRule> activeRules = service.getActiveRulesByInvestor(investorId);
-        return ResponseEntity.ok(activeRules);
-    }
+    // @GetMapping("/investor/{investorId}/active")
+    // public ResponseEntity<List<AssetClassAllocationRule>> getActive(@PathVariable Long investorId) {
+    //     List<AssetClassAllocationRule> activeRules = service.getActiveRulesByInvestor(investorId);
+    //     return ResponseEntity.ok(activeRules);
+    // }
 
     // ---------------- GET SINGLE RULE BY ID ----------------
     @GetMapping("/{id}")
