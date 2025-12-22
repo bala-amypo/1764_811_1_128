@@ -21,7 +21,7 @@ public class InvestorProfileController {
 
     @PostMapping
     public ResponseEntity<InvestorProfile> createInvestor(
-            @RequestBody InvestorProfile investor) {
+             @RequestBody InvestorProfile investor) {
 
         InvestorProfile created = service.createInvestor(investor);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);

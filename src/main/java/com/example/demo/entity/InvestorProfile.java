@@ -13,6 +13,7 @@ public class InvestorProfile {
     private String investorId;
     private String fullName;
     @Column(unique=true)
+    @Email(message="Email not valid")
     private String email;
     private Boolean active=true; 
     private LocalDateTime createdAt=LocalDateTime.now();
