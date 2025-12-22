@@ -20,30 +20,25 @@ public class InvestorProfileController {
     }
 
     @PostMapping
-    public ResponseEntity<InvestorProfile> createInvestor(@RequestBody InvestorProfile investor) {
-        try {
-            InvestorProfile created = service.createInvestor(investor);
-            return ResponseEntity.status(HttpStatus.CREATED).body(created);
-        } catch (IllegalArgumentException ex) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build(); // uniqueness violation
-        }
+    public ResponseEntity<InvestorProfile> createInvestor(
+            @RequestBody InvestorProfile investor) {
+
+        InvestorProfile created = service.createInvestor(investor);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<InvestorProfile> getById(@PathVariable Long id) {
-        try {
-            return ResponseEntity.ok(service.getInvestorById(id));
-        } catch (ResourceNotFoundException ex) {
-            return ResponseEntity.notFound().build();
-        }
+        InvestorProfile investor = service.getInvestorById(id);
+        return ResponseEntity.ok(investor);
     }
+
     @GetMapping("/lookup/{investorId}")
-    public ResponseEntity<InvestorProfile> getByBusinessInvestorId(@PathVariable String investorId) {
-        try {
-            return ResponseEntity.ok(service.findByInvestorId(investorId));
-        } catch (ResourceNotFoundException ex) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<InvestorProfile> getByBusinessInvestorId(
+            @PathVariable String investorId) {
+
+        InvestorProfile investor = service.findByInvestorId(investorId);
+        return ResponseEntity.ok(investor);
     }
 
     @GetMapping
@@ -53,7 +48,13 @@ public class InvestorProfileController {
     }
 
     @PutMapping("/{id}/status/{active}")
-    public ResponseEntity<InvestorProfile> updateStatus(@PathVariable Long id, @PathVariable boolean active) {
-        InvestorProfile investor = service.getInvestorById(id);
+    public ResponseEntity<InvestorProfile> updateStatus(
+            @PathVariable Long id,
+            @PathVariable boolean active) {
+
+        InvestorProfile updated =
+                service.updateInvestorStatus(id, active);
+
+        return ResponseEntity.ok(updated);
     }
 }
