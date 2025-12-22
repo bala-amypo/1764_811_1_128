@@ -41,6 +41,7 @@ public class InvestorProfileController {
         return ResponseEntity.ok(investor);
     }
 
+
     @GetMapping
     public ResponseEntity<List<InvestorProfile>> getAll() {
         List<InvestorProfile> list = service.getAllInvestors();
