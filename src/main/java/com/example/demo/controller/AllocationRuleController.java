@@ -19,18 +19,16 @@ public class AllocationRuleController {
         this.service = service;
     }
 
-    // ---------------- CREATE ----------------
     @PostMapping
     public ResponseEntity<AssetClassAllocationRule> create(@RequestBody AssetClassAllocationRule rule) {
         try {
             AssetClassAllocationRule created = service.createRule(rule);
             return ResponseEntity.status(HttpStatus.CREATED).body(created);
         } catch (IllegalArgumentException ex) {
-            return ResponseEntity.badRequest().build(); // invalid targetPercentage
+            return ResponseEntity.badRequest().build(); 
         }
     }
 
-    // ---------------- UPDATE ----------------
     @PutMapping("/{id}")
     public ResponseEntity<AssetClassAllocationRule> update(@PathVariable Long id,
                                                            @RequestBody AssetClassAllocationRule rule) {
@@ -49,13 +47,6 @@ public class AllocationRuleController {
         List<AssetClassAllocationRule> rules = service.getRulesByInvestor(investorId);
         return ResponseEntity.ok(rules);
     }
-
-    // ---------------- GET ACTIVE RULES ----------------
-    // @GetMapping("/investor/{investorId}/active")
-    // public ResponseEntity<List<AssetClassAllocationRule>> getActive(@PathVariable Long investorId) {
-    //     List<AssetClassAllocationRule> activeRules = service.getActiveRulesByInvestor(investorId);
-    //     return ResponseEntity.ok(activeRules);
-    // }
     @GetMapping("/{id}")
     public ResponseEntity<AssetClassAllocationRule> getById(@PathVariable Long id) {
         try {

@@ -19,7 +19,6 @@ public class InvestorProfileController {
         this.service = service;
     }
 
-    // ---------------- CREATE ----------------
     @PostMapping
     public ResponseEntity<InvestorProfile> createInvestor(@RequestBody InvestorProfile investor) {
         try {
@@ -30,7 +29,6 @@ public class InvestorProfileController {
         }
     }
 
-    // ---------------- GET BY INTERNAL ID ----------------
     @GetMapping("/{id}")
     public ResponseEntity<InvestorProfile> getById(@PathVariable Long id) {
         try {
@@ -39,8 +37,6 @@ public class InvestorProfileController {
             return ResponseEntity.notFound().build();
         }
     }
-
-    // ---------------- GET BY BUSINESS INVESTOR ID ----------------
     @GetMapping("/lookup/{investorId}")
     public ResponseEntity<InvestorProfile> getByBusinessInvestorId(@PathVariable String investorId) {
         try {
@@ -50,17 +46,14 @@ public class InvestorProfileController {
         }
     }
 
-    // ---------------- GET ALL ----------------
     @GetMapping
     public ResponseEntity<List<InvestorProfile>> getAll() {
         List<InvestorProfile> list = service.getAllInvestors();
         return ResponseEntity.ok(list);
     }
 
-    // ---------------- UPDATE ACTIVE STATUS ----------------
     @PutMapping("/{id}/status/{active}")
-    public ResponseEntity<InvestorProfile> updateStatus(@PathVariable Long id,
-                                                        @PathVariable boolean active) {
+    public ResponseEntity<InvestorProfile> updateStatus(@PathVariable Long id, @PathVariable boolean active) {
         try {
             InvestorProfile updated = service.updateInvestorStatus(id, active);
             return ResponseEntity.ok(updated);
