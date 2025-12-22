@@ -54,11 +54,6 @@ public class InvestorProfileController {
 
     @PutMapping("/{id}/status/{active}")
     public ResponseEntity<InvestorProfile> updateStatus(@PathVariable Long id, @PathVariable boolean active) {
-        try {
-            InvestorProfile updated = service.updateInvestorStatus(id, active);
-            return ResponseEntity.ok(updated);
-        } catch (ResourceNotFoundException ex) {
-            return ResponseEntity.notFound().build();
-        }
+        InvestorProfile investor = service.getInvestorById(id);
     }
 }
