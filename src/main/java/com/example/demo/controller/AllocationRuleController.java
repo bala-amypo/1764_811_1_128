@@ -40,11 +40,10 @@ public class AllocationRuleController {
         } catch (ResourceNotFoundException ex) {
             return ResponseEntity.notFound().build();
         } catch (IllegalArgumentException ex) {
-            return ResponseEntity.badRequest().build(); // invalid targetPercentage
+            return ResponseEntity.badRequest().build(); 
         }
     }
 
-    // ---------------- GET BY INVESTOR ----------------
     @GetMapping("/investor/{investorId}")
     public ResponseEntity<List<AssetClassAllocationRule>> getByInvestor(@PathVariable Long investorId) {
         List<AssetClassAllocationRule> rules = service.getRulesByInvestor(investorId);
@@ -57,8 +56,6 @@ public class AllocationRuleController {
     //     List<AssetClassAllocationRule> activeRules = service.getActiveRulesByInvestor(investorId);
     //     return ResponseEntity.ok(activeRules);
     // }
-
-    // ---------------- GET SINGLE RULE BY ID ----------------
     @GetMapping("/{id}")
     public ResponseEntity<AssetClassAllocationRule> getById(@PathVariable Long id) {
         try {
@@ -69,7 +66,6 @@ public class AllocationRuleController {
         }
     }
 
-    // ---------------- GET ALL RULES ----------------
     @GetMapping
     public ResponseEntity<List<AssetClassAllocationRule>> getAll() {
         return ResponseEntity.ok(service.getAllRules());
