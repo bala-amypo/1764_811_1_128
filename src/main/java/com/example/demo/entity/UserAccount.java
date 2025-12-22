@@ -3,7 +3,7 @@ package com.example.demo.entity;
 import com.example.demo.entity.enums.RoleType;
 
 import jakarta.persistence.*;
-
+import jakarta.validation.constraints.Email;
 @Entity
 public class UserAccount {
     @Id
@@ -12,6 +12,7 @@ public class UserAccount {
     @Column(unique=true)
     private String username;
     @Column(unique=true)
+    @Email(message="Invalid email")
     private String email;
     private String password;
     private RoleType role;
