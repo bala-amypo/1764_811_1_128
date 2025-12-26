@@ -9,27 +9,36 @@ import java.util.Map;
 
 public class AllocationUtil {
 
-    // Calculate total portfolio value
+    // 🔴 CORRECTED: Use getCurrentValue() instead of getValue()
     public static double calculateTotalValue(List<HoldingRecord> holdings) {
         return holdings.stream()
-                .mapToDouble(HoldingRecord::getValue) // ✅ CORRECTED: method reference fixed
+                .mapToDouble(HoldingRecord::getCurrentValue) // ✅ corrected line
                 .sum();
     }
 
-    // Calculate allocation percentages per asset class
-    public static Map<AssetClassType, Double> calculateAllocationPercentages(List<HoldingRecord> holdings, double totalValue) {
+    // 🔴 CORRECTED: Use getCurrentValue() instead of getValue()
+    public static Map<AssetClassType, Double> calculateAllocationPercentages(
+            List<HoldingRecord> holdings,
+            double totalValue
+    ) {
         Map<AssetClassType, Double> percentages = new HashMap<>();
         for (HoldingRecord h : holdings) {
-            percentages.put(h.getAssetClass(), h.getValue() / totalValue * 100); // ✅ CORRECTED: replaced invalid h.getValue() reference
+            percentages.put(
+                    h.getAssetClass(),
+                    h.getCurrentValue() / totalValue * 100 // ✅ corrected line
+            );
         }
         return percentages;
     }
 
-    // Convert map to JSON-like string
-    public static String toJson(Map<AssetClassType, Double> map) {
+    public static String toJson(Map<AssetClassType, Double> percentages) {
         StringBuilder sb = new StringBuilder("{");
-        map.forEach((k, v) -> sb.append("\"").append(k).append("\":").append(v).append(","));
-        if (!map.isEmpty()) sb.deleteCharAt(sb.length() - 1);
+        percentages.forEach((k, v) -> sb.append("\"")
+                .append(k.name())
+                .append("\":")
+                .append(String.format("%.2f", v))
+                .append(","));
+        if (sb.length() > 1) sb.deleteCharAt(sb.length() - 1); // remove last comma
         sb.append("}");
         return sb.toString();
     }
