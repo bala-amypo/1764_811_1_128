@@ -12,8 +12,8 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    private static final String secret = "ZmRnaGprbG1hYm5vcHFyc3R1dnd4eXo0";
-    private static final long validityInMs = 3600000;
+    private static  String secret = "ZmRnaGprbG1hYm5vcHFyc3R1dnd4eXo0";
+    private static long validityInMs = 3600000;
 
     // Public constructor
     public JwtUtil() {
