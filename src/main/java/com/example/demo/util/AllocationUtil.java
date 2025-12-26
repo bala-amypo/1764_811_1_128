@@ -9,14 +9,13 @@ import java.util.Map;
 
 public class AllocationUtil {
 
-    // 🔴 CORRECTED: Use getCurrentValue() instead of getValue()
+    
     public static double calculateTotalValue(List<HoldingRecord> holdings) {
         return holdings.stream()
-                .mapToDouble(HoldingRecord::getCurrentValue) // ✅ corrected line
+                .mapToDouble(HoldingRecord::getCurrentValue) 
                 .sum();
     }
 
-    // 🔴 CORRECTED: Use getCurrentValue() instead of getValue()
     public static Map<AssetClassType, Double> calculateAllocationPercentages(
             List<HoldingRecord> holdings,
             double totalValue
@@ -25,7 +24,7 @@ public class AllocationUtil {
         for (HoldingRecord h : holdings) {
             percentages.put(
                     h.getAssetClass(),
-                    h.getCurrentValue() / totalValue * 100 // ✅ corrected line
+                    h.getCurrentValue() / totalValue * 100 
             );
         }
         return percentages;
@@ -38,7 +37,7 @@ public class AllocationUtil {
                 .append("\":")
                 .append(String.format("%.2f", v))
                 .append(","));
-        if (sb.length() > 1) sb.deleteCharAt(sb.length() - 1); // remove last comma
+        if (sb.length() > 1) sb.deleteCharAt(sb.length() - 1); 
         sb.append("}");
         return sb.toString();
     }
