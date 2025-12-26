@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.security.JwtUtil;
+import com.example.demo.config.JwtTokenProvider;
 import com.example.demo.dto.AuthRequest;
 import com.example.demo.dto.AuthResponse;
 import com.example.demo.dto.RegisterRequest;
@@ -18,12 +18,12 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final UserAccountRepository userAccountRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtUtil jwtTokenProvider;
+    private final JwtTokenProvider jwtTokenProvider;
 
     public AuthController(AuthenticationManager authenticationManager,
                           UserAccountRepository userAccountRepository,
                           PasswordEncoder passwordEncoder,
-                          JwtUtil jwtTokenProvider) {
+                          JwtTokenProvider jwtTokenProvider) {
         this.authenticationManager = authenticationManager;
         this.userAccountRepository = userAccountRepository;
         this.passwordEncoder = passwordEncoder;
