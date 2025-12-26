@@ -22,10 +22,10 @@ public class JwtUtil {
     }
 
     // Optional: Constructor with parameters
-    public JwtUtil(String secret, long validityInMs) {
-        this.secret = secret;
-        this.validityInMs = validityInMs;
-    }
+    // public JwtUtil(String secret, long validityInMs) {
+    //     this.secret = secret;
+    //     this.validityInMs = validityInMs;
+    // }
     private final SecretKey key = Keys.hmacShaKeyFor(this.secret.getBytes());
     public String generateToken(Long userId, String email, String role) {
 
