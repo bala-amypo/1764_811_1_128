@@ -1,38 +1,39 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.HoldingRecord;
-import com.example.demo.service.HoldingRecordService;
+import com.example.demo.service.impl.HoldingRecordServiceImpl;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/holdings")
 public class HoldingRecordController {
 
-    private final HoldingRecordService service;
+    private final HoldingRecordServiceImpl holdingRecordService;
 
-    public HoldingRecordController(HoldingRecordService service) {
-        this.service = service;
+    public HoldingRecordController(HoldingRecordServiceImpl holdingRecordService) {
+        this.holdingRecordService = holdingRecordService;
     }
 
-    @PostMapping("/")
-    public HoldingRecord record(@RequestBody HoldingRecord holding) {
-        return service.recordHolding(holding);
+    @PostMapping
+    public ResponseEntity<HoldingRecord> recordHolding(@RequestBody HoldingRecord holding) {
+        return ResponseEntity.ok(holdingRecordService.recordHolding(holding));
     }
 
     @GetMapping("/investor/{investorId}")
-    public List<HoldingRecord> getByInvestor(@PathVariable Long investorId) {
-        return service.getHoldingsByInvestor(investorId);
+    public ResponseEntity<List<HoldingRecord>> getHoldingsByInvestor(@PathVariable Long investorId) {
+        return ResponseEntity.ok(holdingRecordService.getHoldingsByInvestor(investorId));
     }
 
     @GetMapping("/{id}")
-    public HoldingRecord getById(@PathVariable Long id) {
-        return service.getHoldingById(id);
+    public ResponseEntity<Optional<HoldingRecord>> getHoldingById(@PathVariable Long id) {
+        return ResponseEntity.ok(holdingRecordService.getHoldingById(id));
     }
 
-    @GetMapping("/")
-    public List<HoldingRecord> getAll() {
-        return service.getAllHoldings();
+    @GetMapping
+    public ResponseEntity<List<HoldingRecord>> getAllHoldings() {
+        return ResponseEntity.ok(holdingRecordService.getAllHoldings());
     }
 }
