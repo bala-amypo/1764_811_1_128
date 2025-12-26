@@ -12,8 +12,8 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    private final String secret;
-    private final long validityInMs;
+    private static final String secret = "ZmRnaGprbG1hYm5vcHFyc3R1dnd4eXo0";
+    private static final long validityInMs = 3600000;
 
     // Public constructor
     public JwtUtil() {
@@ -22,10 +22,10 @@ public class JwtUtil {
     }
 
     // Optional: Constructor with parameters
-    // public JwtUtil(String secret, long validityInMs) {
-    //     this.secret = secret;
-    //     this.validityInMs = validityInMs;
-    // }
+    public JwtUtil(String secret, long validityInMs) {
+        this.secret = secret;
+        this.validityInMs = validityInMs;
+    }
     private final SecretKey key = Keys.hmacShaKeyFor(this.secret.getBytes());
     public String generateToken(Long userId, String email, String role) {
 
