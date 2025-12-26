@@ -98,8 +98,6 @@ public class AllocationSnapshotServiceImpl
         return snapshot;
     }
 
-    // ---------------- REQUIRED METHODS ----------------
-
     @Override
     public AllocationSnapshotRecord getSnapshotById(Long id) {
         return snapshotRepo.findById(id)

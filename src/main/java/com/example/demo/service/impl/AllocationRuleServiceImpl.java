@@ -1,87 +1,57 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.*;
-import com.example.demo.entity.enums.*;
-import com.example.demo.repository.*;
-import com.example.demo.service.AllocationSnapshotService;
+import com.example.demo.entity.AssetClassAllocationRule;
 import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.repository.AssetClassAllocationRuleRepository;
+import com.example.demo.service.AllocationRuleService;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
 
 @Service
-public class AllocationSnapshotServiceImpl implements AllocationSnapshotService {
+public class AllocationRuleServiceImpl implements AllocationRuleService {
 
-    private final AllocationSnapshotRecordRepository snapshotRepo;
-    private final HoldingRecordRepository holdingRepo;
-    private final AssetClassAllocationRuleRepository ruleRepo;
-    private final RebalancingAlertRecordRepository alertRepo;
+    private final AssetClassAllocationRuleRepository repository;
 
-    public AllocationSnapshotServiceImpl(
-            AllocationSnapshotRecordRepository snapshotRepo,
-            HoldingRecordRepository holdingRepo,
-            AssetClassAllocationRuleRepository ruleRepo,
-            RebalancingAlertRecordRepository alertRepo) {
-        this.snapshotRepo = snapshotRepo;
-        this.holdingRepo = holdingRepo;
-        this.ruleRepo = ruleRepo;
-        this.alertRepo = alertRepo;
+    public AllocationRuleServiceImpl(AssetClassAllocationRuleRepository repository) {
+        this.repository = repository;
     }
 
     @Override
-    public AllocationSnapshotRecord computeSnapshot(Long investorId) {
-
-        List<HoldingRecord> holdings = holdingRepo.findByInvestorId(investorId);
-        if (holdings.isEmpty()) {
-            throw new IllegalArgumentException("No holdings");
+    public AssetClassAllocationRule createRule(AssetClassAllocationRule rule) {
+        if (rule.getTargetPercentage() < 0 || rule.getTargetPercentage() > 100) {
+            throw new IllegalArgumentException("Percentage must be between 0 and 100");
         }
+        return repository.save(rule);
+    }
 
-        double total = holdings.stream()
-                .mapToDouble(HoldingRecord::getCurrentValue)
-                .sum();
+    @Override
+    public AssetClassAllocationRule updateRule(Long id, AssetClassAllocationRule updatedRule) {
+        AssetClassAllocationRule existing = getRuleById(id);
+        existing.setAssetClass(updatedRule.getAssetClass());
+        existing.setTargetPercentage(updatedRule.getTargetPercentage());
+        existing.setActive(updatedRule.getActive());
+        return repository.save(existing);
+    }
 
-        Map<AssetClassType, Double> percentages = new HashMap<>();
+    @Override
+    public List<AssetClassAllocationRule> getRulesByInvestor(Long investorId) {
+        return repository.findByInvestorId(investorId);
+    }
 
-        for (HoldingRecord h : holdings) {
-            percentages.merge(
-                h.getAssetClass(),
-                (h.getCurrentValue() / total) * 100,
-                Double::sum
-            );
-        }
+    @Override
+    public List<AssetClassAllocationRule> getActiveRulesByInvestor(Long investorId) {
+        return repository.findActiveRulesHql(investorId);
+    }
 
-        AllocationSnapshotRecord snapshot = new AllocationSnapshotRecord();
-        snapshot.setInvestorId(investorId);
-        snapshot.setTotalPortfolioValue(total);
+    @Override
+    public AssetClassAllocationRule getRuleById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Rule not found"));
+    }
 
-        try {
-            snapshot.setAllocationJson(
-                new ObjectMapper().writeValueAsString(percentages)
-            );
-        } catch (Exception e) {
-            snapshot.setAllocationJson("{}");
-        }
-
-        snapshotRepo.save(snapshot);
-
-        for (AssetClassAllocationRule rule : ruleRepo.findActiveRulesHql(investorId)) {
-            double current = percentages.getOrDefault(rule.getAssetClass(), 0.0);
-            if (current > rule.getTargetPercentage()) {
-
-                RebalancingAlertRecord alert = new RebalancingAlertRecord();
-                alert.setInvestorId(investorId);
-                alert.setAssetClass(rule.getAssetClass());
-                alert.setCurrentPercentage(current);
-                alert.setTargetPercentage(rule.getTargetPercentage());
-                alert.setSeverity(AlertSeverity.HIGH);
-                alert.setMessage("Rebalancing required");
-
-                alert.validate();
-                alertRepo.save(alert);
-            }
-        }
-
-        return snapshot;
+    @Override
+    public List<AssetClassAllocationRule> getAllRules() {
+        return repository.findAll();
     }
 }

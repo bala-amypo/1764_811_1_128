@@ -1,8 +1,8 @@
-// package com.example.demo.service;
+package com.example.demo.service;
 
-// import com.example.demo.entity.UserAccount;
+import com.example.demo.entity.UserAccount;
 
-// public interface UserAccountService {
-//     UserAccount registerUser(UserAccount user);
-//     UserAccount getUserByEmail(String email);
-// }
+public interface UserAccountService {
+    UserAccount registerUser(UserAccount user);
+    UserAccount getUserByEmail(String email);
+}
