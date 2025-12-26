@@ -1,74 +1,63 @@
 package com.example.demo.controller;
 
-import com.example.demo.config.JwtTokenProvider;
-import com.example.demo.dto.AuthRequest;
-import com.example.demo.dto.AuthResponse;
-import com.example.demo.dto.RegisterRequest;
 import com.example.demo.entity.UserAccount;
+// import com.example.demo.entity.enums.RoleType;
 import com.example.demo.repository.UserAccountRepository;
-import org.springframework.security.authentication.*;
-import org.springframework.security.core.Authentication;
+import com.example.demo.config.JwtTokenProvider;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final AuthenticationManager authenticationManager;
-    private final UserAccountRepository userAccountRepository;
+    private final UserAccountRepository userRepo;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public AuthController(AuthenticationManager authenticationManager,
-                          UserAccountRepository userAccountRepository,
+    public AuthController(UserAccountRepository userRepo,
                           PasswordEncoder passwordEncoder,
+                          AuthenticationManager authenticationManager,
                           JwtTokenProvider jwtTokenProvider) {
-        this.authenticationManager = authenticationManager;
-        this.userAccountRepository = userAccountRepository;
+        this.userRepo = userRepo;
         this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @PostMapping("/register")
-    public UserAccount register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<?> register(@RequestBody UserAccount user) {
+        if (userRepo.findByUsername(user.getUsername()).isPresent()) {
+            return ResponseEntity.badRequest().body("Username already exists");
+        }
+        if (userRepo.findByEmail(user.getEmail()).isPresent()) {
+            return ResponseEntity.badRequest().body("Email already exists");
+        }
 
-        UserAccount user = new UserAccount();
-        user.setUsername(request.getUsername());
-        user.setEmail(request.getEmail());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRole(
-                request.getRole() == null
-                        ? com.example.demo.entity.enums.RoleType.INVESTOR
-                        : com.example.demo.entity.enums.RoleType.valueOf(request.getRole())
-        );
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setActive(true);
-
-        return userAccountRepository.save(user);
+        userRepo.save(user);
+        return ResponseEntity.ok("User registered successfully");
     }
 
     @PostMapping("/login")
-    public AuthResponse login(@RequestBody AuthRequest request) {
+    public ResponseEntity<?> login(@RequestBody UserAccount loginRequest) {
+        UsernamePasswordAuthenticationToken authToken =
+                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
+        authenticationManager.authenticate(authToken);
 
-        Authentication authentication =
-                authenticationManager.authenticate(
-                        new UsernamePasswordAuthenticationToken(
-                                request.getEmail(),
-                                request.getPassword()
-                        )
-                );
-
-        UserAccount user = userAccountRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        String token = jwtTokenProvider.generateToken(authentication, user);
-
-        AuthResponse response = new AuthResponse();
-        response.setToken(token);
-        response.setUserId(user.getId());
-        response.setEmail(user.getEmail());
-        response.setRole(user.getRole().name());
-
-        return response;
+        Optional<UserAccount> userOpt = userRepo.findByUsername(loginRequest.getUsername());
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.badRequest().body("Invalid credentials");
+        }
+        UserAccount user = userOpt.get();
+        String token = jwtTokenProvider.generateToken(authToken, user);
+        return ResponseEntity.ok(token);
     }
 }
