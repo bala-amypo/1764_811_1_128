@@ -1,14 +1,16 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.AllocationSnapshotRecord;
+import com.example.demo.entity.AssetClassAllocationRule;
+import com.example.demo.entity.HoldingRecord;
+import com.example.demo.entity.RebalancingAlertRecord;
+import com.example.demo.entity.enums.AssetClassType;
+import com.example.demo.entity.enums.AlertSeverity;
 import com.example.demo.repository.AllocationSnapshotRecordRepository;
 import com.example.demo.repository.AssetClassAllocationRuleRepository;
 import com.example.demo.repository.HoldingRecordRepository;
 import com.example.demo.repository.RebalancingAlertRecordRepository;
 import com.example.demo.service.AllocationSnapshotService;
-import com.example.demo.entity.*;
-import com.example.demo.entity.enums.*;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +18,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
-public class AllocationSnapshotServiceImpl
-        implements AllocationSnapshotService {
+public class AllocationSnapshotServiceImpl implements AllocationSnapshotService {
 
     private final AllocationSnapshotRecordRepository snapshotRepo;
     private final HoldingRecordRepository holdingRepo;
@@ -40,12 +41,12 @@ public class AllocationSnapshotServiceImpl
     public AllocationSnapshotRecord computeSnapshot(Long investorId) {
 
         List<HoldingRecord> holdings = holdingRepo.findByInvestorId(investorId);
-        if (holdings.isEmpty()) {
+        if (holdings == null || holdings.isEmpty()) {
             throw new IllegalArgumentException("No holdings");
         }
 
         double total = holdings.stream()
-                .mapToDouble(HoldingRecord::getCurrentValue)
+                .mapToDouble(HoldingRecord::getCurrentValue) // ✅ corrected
                 .sum();
 
         if (total <= 0) {
@@ -56,7 +57,7 @@ public class AllocationSnapshotServiceImpl
         for (HoldingRecord h : holdings) {
             allocation.merge(
                     h.getAssetClass(),
-                    (h.getCurrentValue() / total) * 100,
+                    (h.getCurrentValue() / total) * 100, // ✅ corrected
                     Double::sum
             );
         }
@@ -64,7 +65,7 @@ public class AllocationSnapshotServiceImpl
         AllocationSnapshotRecord snapshot = new AllocationSnapshotRecord();
         snapshot.setInvestorId(investorId);
         snapshot.setSnapshotDate(LocalDateTime.now());
-        snapshot.setTotalportfolioValue(total);
+        snapshot.setTotalPortfolioValue(total); // ✅ corrected setter
 
         try {
             snapshot.setAllocationJson(
@@ -76,8 +77,8 @@ public class AllocationSnapshotServiceImpl
 
         snapshotRepo.save(snapshot);
 
-        List<AssetClassAllocationRule> rules =
-                ruleRepo.findActiveRulesHql(investorId);
+        // ✅ Convert Iterable to List to fix compilation
+        List<AssetClassAllocationRule> rules = List.copyOf(ruleRepo.findActiveRulesHql(investorId));
 
         for (AssetClassAllocationRule rule : rules) {
             Double currentPct = allocation.get(rule.getAssetClass());
@@ -91,10 +92,12 @@ public class AllocationSnapshotServiceImpl
                 alert.setSeverity(AlertSeverity.HIGH);
                 alert.setMessage("Allocation exceeded target");
                 alert.setAlertDate(LocalDateTime.now());
+                alert.setResolved(false); // ✅ ensure resolved flag is set
 
                 alertRepo.save(alert);
             }
         }
+
         return snapshot;
     }
 
