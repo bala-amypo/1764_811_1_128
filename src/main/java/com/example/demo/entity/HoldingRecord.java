@@ -18,14 +18,21 @@ public class HoldingRecord {
     public HoldingRecord() {
     }
     
-    public HoldingRecord(Long id, Long investorId, AssetClassType assetClass, Double currentValue,
-            LocalDateTime snapshotDate) {
-        this.id = id;
-        this.investorId = investorId;
-        this.assetClass = assetClass;
-        this.currentValue = currentValue;
-        this.snapshotDate = snapshotDate;
-    }
+    // public HoldingRecord(Long id, Long investorId, AssetClassType assetClass, Double currentValue,
+    //         LocalDateTime snapshotDate) {
+    //     this.id = id;
+    //     this.investorId = investorId;
+    //     this.assetClass = assetClass;
+    //     this.currentValue = currentValue;
+    //     this.snapshotDate = snapshotDate;
+    // }
+    public HoldingRecord(Long investorId, AssetClassType assetClass,
+                     Double currentValue, LocalDateTime snapshotDate) {
+    this.investorId = investorId;
+    this.assetClass = assetClass;
+    this.currentValue = currentValue;
+    this.snapshotDate = snapshotDate;
+}
 
     public Long getId() {
         return id;

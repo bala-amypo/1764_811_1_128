@@ -23,19 +23,34 @@ public class RebalancingAlertRecord {
     public RebalancingAlertRecord() {
     }
     
-    public RebalancingAlertRecord(Long id, Long investorId, AssetClassType assetClass, Double currentPercentage,
-            Double targetPercentage, AlertSeverity severity, String message, LocalDateTime alertDate,
-            Boolean resolved) {
-        this.id = id;
-        this.investorId = investorId;
-        this.assetClass = assetClass;
-        this.currentPercentage = currentPercentage;
-        this.targetPercentage = targetPercentage;
-        this.severity = severity;
-        this.message = message;
-        this.alertDate = alertDate;
-        this.resolved = resolved;
-    }
+    // public RebalancingAlertRecord(Long id, Long investorId, AssetClassType assetClass, Double currentPercentage,
+    //         Double targetPercentage, AlertSeverity severity, String message, LocalDateTime alertDate,
+    //         Boolean resolved) {
+    //     this.id = id;
+    //     this.investorId = investorId;
+    //     this.assetClass = assetClass;
+    //     this.currentPercentage = currentPercentage;
+    //     this.targetPercentage = targetPercentage;
+    //     this.severity = severity;
+    //     this.message = message;
+    //     this.alertDate = alertDate;
+    //     this.resolved = resolved;
+    // }
+
+    public RebalancingAlertRecord(Long investorId, AssetClassType assetClass,
+        Double currentPercentage, Double targetPercentage,
+        AlertSeverity severity, String message,
+        LocalDateTime alertDate, Boolean resolved) {
+    this.investorId = investorId;
+    this.assetClass = assetClass;
+    this.currentPercentage = currentPercentage;
+    this.targetPercentage = targetPercentage;
+    this.severity = severity;
+    this.message = message;
+    this.alertDate = alertDate;
+    this.resolved = resolved;
+}
+
 
     public Long getId() {
         return id;

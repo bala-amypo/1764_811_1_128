@@ -17,14 +17,23 @@ public class AllocationSnapshotRecord {
     public AllocationSnapshotRecord() {
     }
     
-    public AllocationSnapshotRecord(Long id, Long investorId, LocalDateTime snapshotDate, Double totalPortfolioValue,
-            String allocationJson) {
-        this.id = id;
-        this.investorId = investorId;
-        this.snapshotDate = snapshotDate;
-        this.totalPortfolioValue = totalPortfolioValue;
-        this.allocationJson = allocationJson;
-    }
+    // public AllocationSnapshotRecord(Long id, Long investorId, LocalDateTime snapshotDate, Double totalPortfolioValue,
+    //         String allocationJson) {
+    //     this.id = id;
+    //     this.investorId = investorId;
+    //     this.snapshotDate = snapshotDate;
+    //     this.totalPortfolioValue = totalPortfolioValue;
+    //     this.allocationJson = allocationJson;
+    // }
+    public AllocationSnapshotRecord(Long investorId,
+        LocalDateTime snapshotDate,
+        Double totalPortfolioValue,
+        String allocationJson) {
+    this.investorId = investorId;
+    this.snapshotDate = snapshotDate;
+    this.totalPortfolioValue = totalPortfolioValue;
+    this.allocationJson = allocationJson;
+}
 
     public Long getId() {
         return id;
