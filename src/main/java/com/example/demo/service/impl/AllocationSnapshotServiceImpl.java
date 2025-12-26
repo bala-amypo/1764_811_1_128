@@ -11,8 +11,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 public class AllocationSnapshotServiceImpl implements AllocationSnapshotService {
@@ -22,6 +20,7 @@ public class AllocationSnapshotServiceImpl implements AllocationSnapshotService 
     private final AssetClassAllocationRuleRepository ruleRepository;
     private final RebalancingAlertRecordRepository alertRepository;
 
+    // 🔴 DO NOT CHANGE ORDER – tests depend on this
     public AllocationSnapshotServiceImpl(
             AllocationSnapshotRecordRepository snapshotRepository,
             HoldingRecordRepository holdingRepository,
@@ -37,18 +36,25 @@ public class AllocationSnapshotServiceImpl implements AllocationSnapshotService 
     @Override
     public AllocationSnapshotRecord computeSnapshot(Long investorId) {
 
-        List<HoldingRecord> holdings = holdingRepository.findByInvestorId(investorId);
+        List<HoldingRecord> holdings =
+                holdingRepository.findByInvestorId(investorId);
+
         if (holdings == null || holdings.isEmpty()) {
-            throw new IllegalArgumentException("No holdings for investor: " + investorId);
+            throw new IllegalArgumentException("No holdings");
         }
 
-        double totalValue = AllocationUtil.calculateTotalValue(holdings);
+        double totalValue =
+                AllocationUtil.calculateTotalValue(holdings); // ✅ updated for corrected AllocationUtil
+
         if (totalValue <= 0) {
-            throw new IllegalArgumentException("Total portfolio value must be > 0");
+            throw new IllegalArgumentException("totalPortfolioValue must be > 0");
         }
 
-        Map<AssetClassType, Double> percentages = AllocationUtil.calculateAllocationPercentages(holdings, totalValue);
-        String allocationJson = AllocationUtil.toJson(percentages);
+        Map<AssetClassType, Double> percentages =
+                AllocationUtil.calculateAllocationPercentages(holdings, totalValue); // ✅ updated for corrected AllocationUtil
+
+        String allocationJson =
+                AllocationUtil.toJson(percentages);
 
         AllocationSnapshotRecord snapshot = new AllocationSnapshotRecord();
         snapshot.setInvestorId(investorId);
@@ -56,22 +62,29 @@ public class AllocationSnapshotServiceImpl implements AllocationSnapshotService 
         snapshot.setTotalPortfolioValue(totalValue);
         snapshot.setAllocationJson(allocationJson);
 
-        AllocationSnapshotRecord savedSnapshot = snapshotRepository.save(snapshot);
+        AllocationSnapshotRecord savedSnapshot =
+                snapshotRepository.save(snapshot);
 
-        // ✅ CORRECTED: Convert Iterable to List for rules
-        List<AssetClassAllocationRule> rules = StreamSupport.stream(ruleRepository.findActiveRulesHql(investorId).spliterator(), false)
-                .collect(Collectors.toList());
+        List<AssetClassAllocationRule> rules =
+                ruleRepository.findActiveRulesHql(investorId);
 
         for (AssetClassAllocationRule rule : rules) {
-            Double currentPercentage = percentages.get(rule.getAssetClass());
-            if (currentPercentage != null && currentPercentage > rule.getTargetPercentage()) {
+
+            Double currentPercentage =
+                    percentages.get(rule.getAssetClass());
+
+            if (currentPercentage != null &&
+                currentPercentage > rule.getTargetPercentage()) {
+
                 RebalancingAlertRecord alert = new RebalancingAlertRecord();
                 alert.setInvestorId(investorId);
                 alert.setAssetClass(rule.getAssetClass());
                 alert.setCurrentPercentage(currentPercentage);
                 alert.setTargetPercentage(rule.getTargetPercentage());
                 alert.setSeverity(AlertSeverity.HIGH);
-                alert.setMessage(rule.getAssetClass().name() + " allocation exceeded target");
+                alert.setMessage(
+                        rule.getAssetClass().name() + " allocation exceeded target"
+                );
                 alert.setAlertDate(LocalDateTime.now());
                 alert.setResolved(false);
 
@@ -85,7 +98,8 @@ public class AllocationSnapshotServiceImpl implements AllocationSnapshotService 
     @Override
     public AllocationSnapshotRecord getSnapshotById(Long id) {
         return snapshotRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Snapshot not found with id: " + id));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Snapshot not found"));
     }
 
     @Override
@@ -93,15 +107,15 @@ public class AllocationSnapshotServiceImpl implements AllocationSnapshotService 
         return snapshotRepository.findAll()
                 .stream()
                 .filter(s -> s.getInvestorId().equals(investorId))
-                .collect(Collectors.toList()); // ✅ CORRECTED: toList() → collect(Collectors.toList()) for Java 8 compatibility
+                .toList();
     }
 
     @Override
     public List<AllocationSnapshotRecord> getAllSnapshots() {
-        return StreamSupport.stream(snapshotRepository.findAll().spliterator(), false)
-                .collect(Collectors.toList()); // ✅ CORRECTED: Iterable → List conversion
+        return snapshotRepository.findAll();
     }
 }
+
 
 
 
