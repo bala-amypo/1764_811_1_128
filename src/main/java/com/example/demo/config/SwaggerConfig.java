@@ -18,7 +18,6 @@ public class SwaggerConfig {
                 .servers(List.of(
                         new Server().url("https://9336.pro604cr.amypo.ai/")
                 ))
-                // Add security scheme for JWT
                 .components(new Components()
                         .addSecuritySchemes("BearerAuth", 
                             new SecurityScheme()
@@ -27,7 +26,6 @@ public class SwaggerConfig {
                                 .bearerFormat("JWT")
                         )
                 )
-                // Apply security globally
                 .addSecurityItem(new SecurityRequirement().addList("BearerAuth"));
     }
 }
