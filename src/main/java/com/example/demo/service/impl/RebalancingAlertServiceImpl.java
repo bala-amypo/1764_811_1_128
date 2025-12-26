@@ -6,6 +6,9 @@ import com.example.demo.repository.RebalancingAlertRecordRepository;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class RebalancingAlertServiceImpl {
 
     private final RebalancingAlertRecordRepository repo;
