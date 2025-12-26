@@ -52,5 +52,10 @@ public class JwtUtil {
                 .parseClaimsJws(token)
                 .getBody();
         return claims.getSubject();
+ 
+    }
+    public String generateToken(Long id, String email, String name) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'generateToken'");
     }
 }
