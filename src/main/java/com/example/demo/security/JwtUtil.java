@@ -1,74 +1,64 @@
 package com.example.demo.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
-import java.security.Key;
+import javax.crypto.SecretKey;
 import java.util.Date;
 
 @Component
 public class JwtUtil {
 
-    // Secret key for signing JWTs (HS256)
-    private final Key secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    private final SecretKey key;
+    private final long validityInMs;
 
-    // Token validity in milliseconds (e.g., 1 hour)
-    private final long validityInMs = 3600000;
+    // Constructor used by JwtTokenProvider
+    public JwtUtil(String secret, long validityInMs) {
+        this.key = Keys.hmacShaKeyFor(secret.getBytes());
+        this.validityInMs = validityInMs;
+    }
 
-    /**
-     * Generate JWT token using username.
-     *
-     * @param username the username to include in the token
-     * @return JWT token string
-     */
-    public String generateToken(String username) {
-        Claims claims = Jwts.claims().setSubject(username);
+    // Default constructor for Spring (optional)
+    public JwtUtil() {
+        String defaultSecret = "thisIsA32ByteMinimumSecureJwtTestKey!";
+        this.key = Keys.hmacShaKeyFor(defaultSecret.getBytes());
+        this.validityInMs = 3600000; // 1 hour
+    }
 
+    // Generate JWT token
+    public String generateToken(String subject) {
         Date now = new Date();
         Date expiry = new Date(now.getTime() + validityInMs);
 
         return Jwts.builder()
-                .setClaims(claims)
+                .setSubject(subject)
                 .setIssuedAt(now)
                 .setExpiration(expiry)
-                .signWith(secretKey)
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    /**
-     * Validate a JWT token.
-     *
-     * @param token the JWT token
-     * @return true if valid, false otherwise
-     */
+    // Validate token
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()
-                    .setSigningKey(secretKey)
-                    .build()
-                    .parseClaimsJws(token);
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token);
             return true;
-        } catch (Exception ex) {
+        } catch (JwtException | IllegalArgumentException ex) {
             return false;
         }
     }
 
-    /**
-     * Extract username from JWT token.
-     *
-     * @param token the JWT token
-     * @return username stored in token
-     */
+    // Extract username/subject
     public String getUsernameFromToken(String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(secretKey)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-
-        return claims.getSubject();
+        return Jwts.parserBuilder()
+                   .setSigningKey(key)
+                   .build()
+                   .parseClaimsJws(token)
+                   .getBody()
+                   .getSubject();
     }
 }

@@ -10,37 +10,25 @@ public class JwtTokenProvider {
 
     private final JwtUtil jwtUtil;
 
-    // Constructor injection of JwtUtil
-    public JwtTokenProvider(JwtUtil jwtUtil) {
-        this.jwtUtil = jwtUtil;
+    // Constructor for your test
+    public JwtTokenProvider(String secret, long validityInMs) {
+        this.jwtUtil = new JwtUtil(secret, validityInMs);
     }
 
-    /**
-     * Generate JWT token for a given authenticated user.
-     * @param authentication the authentication object (optional usage)
-     * @param user the user account
-     * @return JWT token as string
-     */
+    // Default constructor for Spring Autowiring
+    public JwtTokenProvider() {
+        this.jwtUtil = new JwtUtil();
+    }
+
     public String generateToken(Authentication authentication, UserAccount user) {
-    // Pass the username from your UserAccount
-    return jwtUtil.generateToken(user.getEmail());
-}
+        // Using authentication name as subject
+        return jwtUtil.generateToken(authentication.getName());
+    }
 
-
-    /**
-     * Validate a JWT token.
-     * @param token the JWT token
-     * @return true if valid, false otherwise
-     */
     public boolean validateToken(String token) {
         return jwtUtil.validateToken(token);
     }
 
-    /**
-     * Extract username/email from JWT token.
-     * @param token the JWT token
-     * @return username/email
-     */
     public String getUsernameFromToken(String token) {
         return jwtUtil.getUsernameFromToken(token);
     }
