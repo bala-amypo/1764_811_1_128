@@ -40,7 +40,7 @@ public class JwtUtil {
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(expiry)
-                .signWith(SignatureAlgorithm.HS256, secret)
+                .signWith(SignatureAlgorithm.HS256, key)
                 .compact();
     }
 
