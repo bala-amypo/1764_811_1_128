@@ -1,7 +1,8 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.HoldingRecord;
-import com.example.demo.service.impl.HoldingRecordServiceImpl;
+import com.example.demo.entity.enums.AssetClassType; // Added missing import
+import com.example.demo.service.HoldingRecordService; // Injecting Interface
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -11,9 +12,10 @@ import java.util.Optional;
 @RequestMapping("/api/holdings")
 public class HoldingRecordController {
 
-    private final HoldingRecordServiceImpl holdingRecordService;
+    // Best Practice: Use the interface 'HoldingRecordService' for injection
+    private final HoldingRecordService holdingRecordService;
 
-    public HoldingRecordController(HoldingRecordServiceImpl holdingRecordService) {
+    public HoldingRecordController(HoldingRecordService holdingRecordService) {
         this.holdingRecordService = holdingRecordService;
     }
 
@@ -36,13 +38,13 @@ public class HoldingRecordController {
     public ResponseEntity<List<HoldingRecord>> getAllHoldings() {
         return ResponseEntity.ok(holdingRecordService.getAllHoldings());
     }
-    @GetMapping("/investor/{investorId}/asset/{assetClass}")
-public ResponseEntity<List<HoldingRecord>> getHoldingsByInvestorAndAssetClass(
-        @PathVariable Long investorId,
-        @PathVariable AssetClassType assetClass) {
-    return ResponseEntity.ok(
-            holdingRecordService.getHoldingsByInvestorAndAssetClass(investorId, assetClass)
-    );
-}
 
+    @GetMapping("/investor/{investorId}/asset/{assetClass}")
+    public ResponseEntity<List<HoldingRecord>> getHoldingsByInvestorAndAssetClass(
+            @PathVariable Long investorId,
+            @PathVariable AssetClassType assetClass) {
+        return ResponseEntity.ok(
+                holdingRecordService.getHoldingsByInvestorAndAssetClass(investorId, assetClass)
+        );
+    }
 }

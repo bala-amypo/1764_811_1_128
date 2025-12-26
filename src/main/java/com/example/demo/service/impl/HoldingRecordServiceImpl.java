@@ -1,3 +1,5 @@
+package com.example.demo.service.impl;
+
 import com.example.demo.entity.HoldingRecord;
 import com.example.demo.entity.enums.AssetClassType;
 import com.example.demo.repository.HoldingRecordRepository;
@@ -27,12 +29,18 @@ public class HoldingRecordServiceImpl implements HoldingRecordService {
     }
 
     @Override
+    public Optional<HoldingRecord> getHoldingById(Long id) {
+        return holdingRecordRepository.findById(id);
+    }
+
+    @Override
     public List<HoldingRecord> getAllHoldings() {
         return holdingRecordRepository.findAll();
     }
 
     @Override
     public List<HoldingRecord> getHoldingsByInvestorAndAssetClass(Long investorId, AssetClassType assetClass) {
-        return holdingRecordRepository.findByInvestorAndAssetClass(investorId, assetClass);
+        // Corrected to call findByInvestorIdAndAssetClass to match Repository
+        return holdingRecordRepository.findByInvestorIdAndAssetClass(investorId, assetClass);
     }
 }
