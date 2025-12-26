@@ -15,7 +15,7 @@ public class JwtUtil {
 
     // Public constructor
     public JwtUtil() {
-        this.secret = "asdfghjkl"; // default secret
+        this.secret = "ZmRnaGprbG1hYm5vcHFyc3R1dnd4eXo0MzIxMg=="; // default secret
         this.validityInMs = 3600000; // default 1 hour
     }
 
