@@ -10,12 +10,8 @@ import java.util.Map;
 public class AllocationUtil {
 
     private AllocationUtil() {
-        // utility class
     }
 
-    /**
-     * Calculate total portfolio value
-     */
     public static double calculateTotalValue(List<HoldingRecord> holdings) {
         double total = 0.0;
         for (HoldingRecord holding : holdings) {
@@ -24,14 +20,11 @@ public class AllocationUtil {
         return total;
     }
 
-    /**
-     * Calculate percentage allocation per asset class
-     */
     public static Map<AssetClassType, Double> calculateAllocationPercentages(
-            List<HoldingRecord> holdings,
-            double totalValue
-    ) {
-        Map<AssetClassType, Double> allocation = new EnumMap<>(AssetClassType.class);
+            List<HoldingRecord> holdings, double totalValue) {
+
+        Map<AssetClassType, Double> allocation =
+                new EnumMap<>(AssetClassType.class);
 
         for (HoldingRecord holding : holdings) {
             AssetClassType type = holding.getAssetClass();
@@ -42,34 +35,31 @@ public class AllocationUtil {
         }
 
         for (AssetClassType type : allocation.keySet()) {
-            double percentage = (allocation.get(type) / totalValue) * 100;
-            allocation.put(type, percentage);
+            allocation.put(type,
+                    (allocation.get(type) / totalValue) * 100
+            );
         }
 
         return allocation;
     }
 
-    /**
-     * Convert allocation map to JSON string
-     * (simple JSON, avoids external dependencies)
-     */
     public static String toJson(Map<AssetClassType, Double> allocation) {
-        StringBuilder json = new StringBuilder("{");
+        StringBuilder sb = new StringBuilder("{");
+        int i = 0;
 
-        int index = 0;
-        for (Map.Entry<AssetClassType, Double> entry : allocation.entrySet()) {
-            json.append("\"")
-                .append(entry.getKey().name())
-                .append("\":")
-                .append(String.format("%.2f", entry.getValue()));
+        for (Map.Entry<AssetClassType, Double> e : allocation.entrySet()) {
+            sb.append("\"")
+              .append(e.getKey().name())
+              .append("\":")
+              .append(String.format("%.2f", e.getValue()));
 
-            if (index < allocation.size() - 1) {
-                json.append(",");
+            if (i < allocation.size() - 1) {
+                sb.append(",");
             }
-            index++;
+            i++;
         }
 
-        json.append("}");
-        return json.toString();
+        sb.append("}");
+        return sb.toString();
     }
 }
