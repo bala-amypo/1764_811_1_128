@@ -19,13 +19,12 @@ public class UserAccount {
     public UserAccount() {
     }
     
-    public UserAccount(Long id, String username, String email, String password, RoleType role, Boolean active) {
-        this.id = id;
+    public UserAccount(String username, String email, String password, RoleType role) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.role = role;
-        this.active = active;
+        this.active = true;
     }
 
     public Long getId() {
