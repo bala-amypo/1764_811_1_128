@@ -7,11 +7,24 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
-@Component  
+@Component
 public class JwtUtil {
 
-    private final String secret = "asdfghjkl"; 
-    private final long validityInMs = 3600000; 
+    private final String secret;
+    private final long validityInMs;
+
+    // Public constructor
+    public JwtUtil() {
+        this.secret = "asdfghjkl"; // default secret
+        this.validityInMs = 3600000; // default 1 hour
+    }
+
+    // Optional: Constructor with parameters
+    public JwtUtil(String secret, long validityInMs) {
+        this.secret = secret;
+        this.validityInMs = validityInMs;
+    }
+
     public String generateToken(Long userId, String email, String role) {
 
         Claims claims = Jwts.claims();
@@ -47,7 +60,6 @@ public class JwtUtil {
     }
 
     public String getEmail(String token) {
-        return getClaims(token).get("email", String.class); 
+        return getClaims(token).get("email", String.class);
     }
 }
-
