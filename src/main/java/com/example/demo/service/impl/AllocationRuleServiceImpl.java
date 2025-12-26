@@ -62,6 +62,7 @@ public class AllocationRuleServiceImpl implements AllocationRuleService {
 
 
 
+
 // package com.example.demo.service.impl;
 
 // import com.example.demo.entity.AssetClassAllocationRule;
