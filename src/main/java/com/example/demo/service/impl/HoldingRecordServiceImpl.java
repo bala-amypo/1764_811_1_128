@@ -40,7 +40,7 @@ public class HoldingRecordServiceImpl implements HoldingRecordService {
 
     @Override
 public List<HoldingRecord> getHoldingsByInvestorAndAssetClass(Long investorId, AssetClassType assetClass) {
-    // Corrected to call the repository method with "Id"
-    return holdingRecordRepository.findByInvestorIdAndAssetClass(investorId, assetClass);
+    // Calling the method that now has the @Query annotation
+    return holdingRecordRepository.findByInvestorAndAssetClass(investorId, assetClass);
 }
 }
