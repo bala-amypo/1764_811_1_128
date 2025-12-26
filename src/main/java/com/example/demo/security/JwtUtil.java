@@ -10,7 +10,7 @@ import java.util.Date;
 @Component  
 public class JwtUtil {
 
-    private final String secret = "YourSecretKeyHere"; // replace with secure secret or load from properties
+    private final String secret = "asdfghjkl"; // replace with secure secret or load from properties
     private final long validityInMs = 3600000; // 1 hour, adjust as needed
 
     public String generateToken(Long userId, String email, String role) {
