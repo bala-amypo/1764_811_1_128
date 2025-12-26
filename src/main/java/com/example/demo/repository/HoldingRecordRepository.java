@@ -9,10 +9,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface HoldingRecordRepository extends JpaRepository<HoldingRecord, Long> {
 
+    // Find all holdings for a specific investor
     List<HoldingRecord> findByInvestorId(Long investorId);
 
-    List<HoldingRecord> findByValueGreaterThan(Double value);
+    // Find all holdings above a certain value
+    List<HoldingRecord> findByCurrentValueGreaterThan(Double currentValue);
 
-    // Added missing method for your test
+    // This matches your test: find by investor and asset class
     List<HoldingRecord> findByInvestorIdAndAssetClass(Long investorId, AssetClassType assetClass);
 }
