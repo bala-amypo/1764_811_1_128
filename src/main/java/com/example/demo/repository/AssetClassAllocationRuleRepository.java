@@ -17,7 +17,8 @@ public interface AssetClassAllocationRuleRepository
     List<AssetClassAllocationRule> findByInvestorId(Long investorId);
 
     @Query("select r from AssetClassAllocationRule r where r.investorId=:investorId and r.active=true")
-        List<AssetClassAllocationRule> findActiveRulesHql(@Param("id") Long investorId);
+List<AssetClassAllocationRule> findActiveRulesHql(@Param("investorId") Long investorId);
+
 
 }
 
