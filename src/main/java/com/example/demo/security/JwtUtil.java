@@ -90,7 +90,7 @@ public class JwtUtil {
         this.key = Keys.hmacShaKeyFor(secretKey.getBytes());
     }
     
-    public String generateToken(Long customerId, String email, String role) {
+    public String generateToken(Long userId, String email, String role) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("userId", userId);
         claims.put("email", email);
@@ -125,11 +125,11 @@ public class JwtUtil {
     
     public Long extractCustomerId(String token) {
         Claims claims = validateToken(token);
-        Object customerIdObj = claims.get("customerId");
-        if (customerIdObj instanceof Integer) {
-            return ((Integer) customerIdObj).longValue();
+        Object userIdObj = claims.get("userId");
+        if (userIdObj instanceof Integer) {
+            return ((Integer) userIdObj).longValue();
         }
-        return (Long) customerIdObj;
+        return (Long) userIdObj;
     }
     
     public String extractRole(String token) {
