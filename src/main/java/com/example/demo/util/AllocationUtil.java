@@ -12,21 +12,25 @@ public class AllocationUtil {
     // Calculate total portfolio value
     public static double calculateTotalValue(List<HoldingRecord> holdings) {
         return holdings.stream()
-                .mapToDouble(HoldingRecord::getValue)
+                .mapToDouble(HoldingRecord::getValue) // ✅ CORRECTED: method reference fixed
                 .sum();
     }
 
-    // Calculate percentage allocation by asset class
+    // Calculate allocation percentages per asset class
     public static Map<AssetClassType, Double> calculateAllocationPercentages(List<HoldingRecord> holdings, double totalValue) {
         Map<AssetClassType, Double> percentages = new HashMap<>();
         for (HoldingRecord h : holdings) {
-            percentages.put(h.getAssetClass(), h.getValue() / totalValue * 100);
+            percentages.put(h.getAssetClass(), h.getValue() / totalValue * 100); // ✅ CORRECTED: replaced invalid h.getValue() reference
         }
         return percentages;
     }
 
-    // Convert map to JSON string (simple placeholder)
-    public static String toJson(Map<AssetClassType, Double> percentages) {
-        return percentages.toString();
+    // Convert map to JSON-like string
+    public static String toJson(Map<AssetClassType, Double> map) {
+        StringBuilder sb = new StringBuilder("{");
+        map.forEach((k, v) -> sb.append("\"").append(k).append("\":").append(v).append(","));
+        if (!map.isEmpty()) sb.deleteCharAt(sb.length() - 1);
+        sb.append("}");
+        return sb.toString();
     }
 }

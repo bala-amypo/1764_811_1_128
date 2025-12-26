@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class AllocationSnapshotServiceImpl implements AllocationSnapshotService {
@@ -36,20 +38,16 @@ public class AllocationSnapshotServiceImpl implements AllocationSnapshotService 
     public AllocationSnapshotRecord computeSnapshot(Long investorId) {
 
         List<HoldingRecord> holdings = holdingRepository.findByInvestorId(investorId);
-
         if (holdings == null || holdings.isEmpty()) {
-            throw new IllegalArgumentException("No holdings found for investor: " + investorId);
+            throw new IllegalArgumentException("No holdings for investor: " + investorId);
         }
 
         double totalValue = AllocationUtil.calculateTotalValue(holdings);
-
         if (totalValue <= 0) {
-            throw new IllegalArgumentException("totalPortfolioValue must be > 0");
+            throw new IllegalArgumentException("Total portfolio value must be > 0");
         }
 
-        Map<com.example.demo.entity.enums.AssetClassType, Double> percentages =
-                AllocationUtil.calculateAllocationPercentages(holdings, totalValue);
-
+        Map<AssetClassType, Double> percentages = AllocationUtil.calculateAllocationPercentages(holdings, totalValue);
         String allocationJson = AllocationUtil.toJson(percentages);
 
         AllocationSnapshotRecord snapshot = new AllocationSnapshotRecord();
@@ -60,11 +58,12 @@ public class AllocationSnapshotServiceImpl implements AllocationSnapshotService 
 
         AllocationSnapshotRecord savedSnapshot = snapshotRepository.save(snapshot);
 
-        List<AssetClassAllocationRule> rules = ruleRepository.findActiveRulesHql(investorId);
+        // ✅ CORRECTED: Convert Iterable to List for rules
+        List<AssetClassAllocationRule> rules = StreamSupport.stream(ruleRepository.findActiveRulesHql(investorId).spliterator(), false)
+                .collect(Collectors.toList());
 
         for (AssetClassAllocationRule rule : rules) {
             Double currentPercentage = percentages.get(rule.getAssetClass());
-
             if (currentPercentage != null && currentPercentage > rule.getTargetPercentage()) {
                 RebalancingAlertRecord alert = new RebalancingAlertRecord();
                 alert.setInvestorId(investorId);
@@ -86,7 +85,7 @@ public class AllocationSnapshotServiceImpl implements AllocationSnapshotService 
     @Override
     public AllocationSnapshotRecord getSnapshotById(Long id) {
         return snapshotRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Snapshot not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Snapshot not found with id: " + id));
     }
 
     @Override
@@ -94,14 +93,16 @@ public class AllocationSnapshotServiceImpl implements AllocationSnapshotService 
         return snapshotRepository.findAll()
                 .stream()
                 .filter(s -> s.getInvestorId().equals(investorId))
-                .toList();
+                .collect(Collectors.toList()); // ✅ CORRECTED: toList() → collect(Collectors.toList()) for Java 8 compatibility
     }
 
     @Override
     public List<AllocationSnapshotRecord> getAllSnapshots() {
-        return snapshotRepository.findAll();
+        return StreamSupport.stream(snapshotRepository.findAll().spliterator(), false)
+                .collect(Collectors.toList()); // ✅ CORRECTED: Iterable → List conversion
     }
 }
+
 
 
 
