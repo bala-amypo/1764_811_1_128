@@ -11,8 +11,15 @@ public interface HoldingRecordRepository extends JpaRepository<HoldingRecord, Lo
 
     List<HoldingRecord> findByInvestorId(Long investorId);
 
-    // This method name must match the field name 'investorId' and 'assetClass' in the Entity
+    // Keep this for the Service
     List<HoldingRecord> findByInvestorIdAndAssetClass(Long investorId, AssetClassType assetClass);
+    
+    // Add this specifically for the Test file (InvestmentSystemTest)
+    List<HoldingRecord> findByInvestorAndAssetClass(Long investorId, AssetClassType assetClass);
 
+    // Add this specifically for the Test file (InvestmentSystemTest)
+    List<HoldingRecord> findByValueGreaterThan(Double value);
+
+    // Keep your original one if needed
     List<HoldingRecord> findByCurrentValueGreaterThan(Double currentValue);
 }
