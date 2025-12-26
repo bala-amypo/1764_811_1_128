@@ -42,7 +42,7 @@ public class AllocationRuleServiceImpl implements AllocationRuleService {
 
     @Override
     public List<AssetClassAllocationRule> getActiveRulesByInvestor(Long investorId) {
-        Iterable<AssetClassAllocationRule> iterable = repository.findActiveRulesHql(investorId); // ✅ corrected line
+        Iterable<AssetClassAllocationRule> iterable = repository.findActiveRulesHql(investorId); // ✅ corrected
         List<AssetClassAllocationRule> list = new ArrayList<>();
         iterable.forEach(list::add); // ✅ convert Iterable -> List
         return list;
@@ -59,6 +59,7 @@ public class AllocationRuleServiceImpl implements AllocationRuleService {
         return repository.findAll();
     }
 }
+
 
 
 
