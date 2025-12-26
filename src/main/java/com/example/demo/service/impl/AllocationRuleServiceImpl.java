@@ -6,7 +6,6 @@ import com.example.demo.repository.AssetClassAllocationRuleRepository;
 import com.example.demo.service.AllocationRuleService;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -37,15 +36,12 @@ public class AllocationRuleServiceImpl implements AllocationRuleService {
 
     @Override
     public List<AssetClassAllocationRule> getRulesByInvestor(Long investorId) {
-        return repository.findByInvestorId(investorId);
+        return repository.findByInvestorId(investorId); // ✅ returns List
     }
 
     @Override
     public List<AssetClassAllocationRule> getActiveRulesByInvestor(Long investorId) {
-        Iterable<AssetClassAllocationRule> iterable = repository.findActiveRulesHql(investorId); // ✅ corrected
-        List<AssetClassAllocationRule> list = new ArrayList<>();
-        iterable.forEach(list::add); // ✅ convert Iterable -> List
-        return list;
+        return repository.findActiveRulesHql(investorId); // ✅ returns List
     }
 
     @Override
@@ -56,10 +52,9 @@ public class AllocationRuleServiceImpl implements AllocationRuleService {
 
     @Override
     public List<AssetClassAllocationRule> getAllRules() {
-        return repository.findAll();
+        return repository.findAll(); // ✅ returns List
     }
 }
-
 
 
 

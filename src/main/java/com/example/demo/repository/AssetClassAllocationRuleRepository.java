@@ -34,5 +34,5 @@ import java.util.List;
 public interface AssetClassAllocationRuleRepository extends CrudRepository<AssetClassAllocationRule, Long> {
     List<AssetClassAllocationRule> findByInvestorId(Long investorId);
     @Query("SELECT r FROM AssetClassAllocationRule r WHERE r.investorId = :investorId AND r.active = true")
-    List<AssetClassAllocationRule> findActiveRulesHql(@Param("investorId") Long investorId);
+    List<AssetClassAllocationRule> findActiveRulesHql(Long investorId);
 }
