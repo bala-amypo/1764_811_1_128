@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
 import java.util.Date;
 
 @Component
@@ -24,7 +25,7 @@ public class JwtUtil {
         this.secret = secret;
         this.validityInMs = validityInMs;
     }
-
+    private final SecretKey key = Keys.hmacShaKeyFor(secret.getBytes());
     public String generateToken(Long userId, String email, String role) {
 
         Claims claims = Jwts.claims();
