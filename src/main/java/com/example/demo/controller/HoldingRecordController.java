@@ -36,4 +36,13 @@ public class HoldingRecordController {
     public ResponseEntity<List<HoldingRecord>> getAllHoldings() {
         return ResponseEntity.ok(holdingRecordService.getAllHoldings());
     }
+    @GetMapping("/investor/{investorId}/asset/{assetClass}")
+public ResponseEntity<List<HoldingRecord>> getHoldingsByInvestorAndAssetClass(
+        @PathVariable Long investorId,
+        @PathVariable AssetClassType assetClass) {
+    return ResponseEntity.ok(
+            holdingRecordService.getHoldingsByInvestorAndAssetClass(investorId, assetClass)
+    );
+}
+
 }
