@@ -53,9 +53,9 @@ public class AllocationSnapshotRecord {
     public void setSnapshotDate(LocalDateTime snapshotDate) {
         this.snapshotDate = snapshotDate;
     }
-    public Double getTotalportfolioValue() {
-        return totalPortfolioValue;
-    }
+    public Double getTotalPortfolioValue() { 
+        return totalPortfolioValue; 
+    } 
     public void setTotalPortfolioValue(Double totalPortfolioValue) {
         this.totalPortfolioValue = totalPortfolioValue;
     }

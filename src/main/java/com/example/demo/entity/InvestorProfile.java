@@ -19,14 +19,13 @@ public class InvestorProfile {
     public InvestorProfile() {
     }
     
-    public InvestorProfile(Long id, String investorId, String fullName, String email, Boolean active,
-            LocalDateTime createdAt) {
-        this.id = id;
+
+    // Constructor used in tests
+    public InvestorProfile(String investorId, String fullName, String email, Boolean active) {
         this.investorId = investorId;
         this.fullName = fullName;
         this.email = email;
         this.active = active;
-        this.createdAt = createdAt;
     }
 
     public Long getId() {

@@ -56,13 +56,14 @@ public class HoldingRecord {
         return currentValue;
     }
     public void setCurrentValue(Double currentValue) {
-        this.currentValue = currentValue;
+    if(currentValue <= 0) throw new IllegalArgumentException("Holding currentValue must be > 0");
+    this.currentValue = currentValue;
     }
+
     public LocalDateTime getSnapshotDate() {
         return snapshotDate;
     }
     public void setSnapshotDate(LocalDateTime snapshotDate) {
         this.snapshotDate = snapshotDate;
     } 
-    
 }
