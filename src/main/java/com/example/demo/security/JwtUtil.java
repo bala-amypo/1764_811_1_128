@@ -14,13 +14,13 @@ public class JwtUtil {
     private final long validityInMs;
 
     // Public constructor
-    public JwtUtil() {
-        this.secret = "asdfghjkl"; // default secret
-        this.validityInMs = 3600000; // default 1 hour
-    }
+    // public JwtUtil() {
+    //     this.secret = "asdfghjkl"; // default secret
+    //     this.validityInMs = 3600000; // default 1 hour
+    // }
 
     // Optional: Constructor with parameters
-    public JwtUtil(String secret, long validityInMs) {
+    public JwtUtil( @Value("${jwt.secret}") String secret,@Value("${jwt.expiration}")  long validityInMs) {
         this.secret = secret;
         this.validityInMs = validityInMs;
     }
