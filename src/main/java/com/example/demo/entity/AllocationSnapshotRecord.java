@@ -47,7 +47,7 @@ public class AllocationSnapshotRecord {
     public Double getTotalportfolioValue() {
         return totalPortfolioValue;
     }
-    public void setTotalportfolioValue(Double totalPortfolioValue) {
+    public void setTotalPortfolioValue(Double totalPortfolioValue) {
         this.totalPortfolioValue = totalPortfolioValue;
     }
     public String getAllocationJson() {
