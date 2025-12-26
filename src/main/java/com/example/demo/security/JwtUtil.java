@@ -26,7 +26,7 @@ public class JwtUtil {
         this.secret = secret;
         this.validityInMs = validityInMs;
     }
-    private final SecretKey key = Keys.hmacShaKeyFor(secret.getBytes());
+    private final SecretKey key = Keys.hmacShaKeyFor(this.secret.getBytes());
     public String generateToken(Long userId, String email, String role) {
 
         Claims claims = Jwts.claims();
