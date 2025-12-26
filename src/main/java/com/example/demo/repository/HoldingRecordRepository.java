@@ -12,5 +12,7 @@ public interface HoldingRecordRepository extends JpaRepository<HoldingRecord, Lo
 
     List<HoldingRecord> findByValueGreaterThan(Double value);
 
-    List<HoldingRecord> findByInvestorAndAssetClass(Long investorId, AssetClassType assetClass);
+    // If your HoldingRecord has a field called investorId
+List<HoldingRecord> findByInvestorIdAndAssetClass(Long investorId, AssetClassType assetClass);
+
 }

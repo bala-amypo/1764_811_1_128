@@ -6,7 +6,7 @@ import com.example.demo.repository.AssetClassAllocationRuleRepository;
 import com.example.demo.service.AllocationRuleService;
 
 import java.util.List;
-
+import org.springframework.stereotype.Service;
 
 @Service
 public class AllocationRuleServiceImpl implements AllocationRuleService {
