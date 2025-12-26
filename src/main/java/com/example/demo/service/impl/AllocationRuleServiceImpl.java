@@ -41,8 +41,7 @@ public class AllocationRuleServiceImpl implements AllocationRuleService {
 
     @Override
     public List<AssetClassAllocationRule> getActiveRulesByInvestor(Long investorId) {
-        // ✅ Corrected line
-        return List.copyOf(repository.findActiveRulesHql(investorId));
+        return repository.findActiveRulesHql(investorId);
     }
 
     @Override
