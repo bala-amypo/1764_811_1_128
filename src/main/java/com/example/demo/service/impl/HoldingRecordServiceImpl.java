@@ -19,7 +19,9 @@ public class HoldingRecordServiceImpl implements HoldingRecordService {
 
     @Override
     public HoldingRecord recordHolding(HoldingRecord holding) {
-        holding.setCurrentValue(holding.getCurrentValue()); // validate
+        if (holding.getCurrentValue() == null || holding.getCurrentValue() <= 0) {
+            throw new IllegalArgumentException("must be > 0");
+        }
         return repo.save(holding);
     }
 
@@ -31,7 +33,8 @@ public class HoldingRecordServiceImpl implements HoldingRecordService {
     @Override
     public HoldingRecord getHoldingById(Long id) {
         return repo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Holding not found"));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Holding not found"));
     }
 
     @Override

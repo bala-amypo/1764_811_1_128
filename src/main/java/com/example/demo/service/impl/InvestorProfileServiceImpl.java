@@ -5,54 +5,55 @@ import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.InvestorProfileRepository;
 import com.example.demo.service.InvestorProfileService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 public class InvestorProfileServiceImpl implements InvestorProfileService {
 
-    private final InvestorProfileRepository repository;
+    private final InvestorProfileRepository repo;
 
-    public InvestorProfileServiceImpl(InvestorProfileRepository repository) {
-        this.repository = repository;
+    public InvestorProfileServiceImpl(InvestorProfileRepository repo) {
+        this.repo = repo;
     }
 
+    @Transactional
     @Override
     public InvestorProfile createInvestor(InvestorProfile investor) {
-        // enforce uniqueness: business/investorId should be unique
-        repository.findByInvestorId(investor.getInvestorId())
-                .ifPresent(existing -> {
-                    throw new IllegalArgumentException("Investor ID already exists");
-                });
-
-        // set default flags if needed
-        if (investor.getActive() == null) {
-            investor.setActive(true);
-        }
-        return repository.save(investor);
+        return repo.save(investor);
     }
 
     @Override
     public InvestorProfile getInvestorById(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Investor not found"));
+        return repo.findById(id)
+                   .orElseThrow(() ->
+                       new ResourceNotFoundException("Investor not found with id " + id));
     }
 
     @Override
     public InvestorProfile findByInvestorId(String investorId) {
-        return repository.findByInvestorId(investorId)
-                .orElseThrow(() -> new ResourceNotFoundException("Investor not found"));
+        return repo.findByInvestorId(investorId)
+                   .orElseThrow(() ->
+                       new ResourceNotFoundException("Investor not found with investorId " + investorId));
     }
 
     @Override
     public List<InvestorProfile> getAllInvestors() {
-        return repository.findAll();
+        return repo.findAll();
     }
 
+    @Transactional
     @Override
     public InvestorProfile updateInvestorStatus(Long id, boolean active) {
         InvestorProfile investor = getInvestorById(id);
         investor.setActive(active);
-        return repository.save(investor);
+        return repo.save(investor);
+    }
+
+    @Transactional
+    public void deleteInvestor(Long id) {
+        InvestorProfile investor = getInvestorById(id);
+        repo.delete(investor);
     }
 }

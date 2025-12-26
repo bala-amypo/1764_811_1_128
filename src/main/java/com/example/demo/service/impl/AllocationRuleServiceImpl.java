@@ -20,17 +20,24 @@ public class AllocationRuleServiceImpl implements AllocationRuleService {
     @Override
     public AssetClassAllocationRule createRule(AssetClassAllocationRule rule) {
         if (rule.getTargetPercentage() < 0 || rule.getTargetPercentage() > 100) {
-            throw new IllegalArgumentException("Percentage must be between 0 and 100");
+            throw new IllegalArgumentException("Target percentage must be between 0 and 100");
         }
         return repository.save(rule);
     }
 
     @Override
     public AssetClassAllocationRule updateRule(Long id, AssetClassAllocationRule updatedRule) {
-        AssetClassAllocationRule existing = getRuleById(id);
+        AssetClassAllocationRule existing = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Rule not found"));
+
+        if (updatedRule.getTargetPercentage() < 0 || updatedRule.getTargetPercentage() > 100) {
+            throw new IllegalArgumentException("Target percentage must be between 0 and 100");
+        }
+
         existing.setAssetClass(updatedRule.getAssetClass());
         existing.setTargetPercentage(updatedRule.getTargetPercentage());
         existing.setActive(updatedRule.getActive());
+
         return repository.save(existing);
     }
 
