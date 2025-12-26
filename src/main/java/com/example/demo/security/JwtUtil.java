@@ -15,11 +15,15 @@ public class JwtUtil {
     private final SecretKey key;
     private final long validityInMs;
 
-    // Hardcoded secret and validity
-    public JwtUtil() {
-        String secret = "ZmRnaGprbG1hYm5vcHFyc3R1dnd4eXo0"; // 256-bit key
+    // Parameterized constructor
+    public JwtUtil(String secret, long validityInMs) {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
-        this.validityInMs = 3600000; // 1 hour
+        this.validityInMs = validityInMs;
+    }
+
+    // Default constructor with hardcoded values
+    public JwtUtil() {
+        this("ZmRnaGprbG1hYm5vcHFyc3R1dnd4eXo0", 3600000); // 1 hour
     }
 
     public String generateToken(Long userId, String email, String role) {
@@ -59,6 +63,7 @@ public class JwtUtil {
         return getClaims(token).get("email", String.class);
     }
 }
+
 
 
 
