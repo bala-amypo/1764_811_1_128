@@ -47,39 +47,17 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-public ResponseEntity<?> login(@RequestBody UserAccount loginRequest) {
-    // 1. Authenticate using Email instead of Username
-    UsernamePasswordAuthenticationToken authToken =
-            new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword());
-    
-    // This will call your CustomUserDetailsService which must now load users by email
-    authenticationManager.authenticate(authToken);
+    public ResponseEntity<?> login(@RequestBody UserAccount loginRequest) {
+        UsernamePasswordAuthenticationToken authToken =
+                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
+        authenticationManager.authenticate(authToken);
 
-    // 2. Fetch the user from the DB using Email to generate the token
-    Optional<UserAccount> userOpt = userRepo.findByEmail(loginRequest.getEmail());
-    
-    if (userOpt.isEmpty()) {
-        return ResponseEntity.status(401).body("Invalid credentials");
+        Optional<UserAccount> userOpt = userRepo.findByUsername(loginRequest.getUsername());
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.badRequest().body("Invalid credentials");
+        }
+        UserAccount user = userOpt.get();
+        String token = jwtTokenProvider.generateToken(authToken, user);
+        return ResponseEntity.ok(token);
     }
-    
-    UserAccount user = userOpt.get();
-    String token = jwtTokenProvider.generateToken(authToken, user);
-    
-    return ResponseEntity.ok(token);
-}
-
-    // @PostMapping("/login")
-    // public ResponseEntity<?> login(@RequestBody UserAccount loginRequest) {
-    //     UsernamePasswordAuthenticationToken authToken =
-    //             new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
-    //     authenticationManager.authenticate(authToken);
-
-    //     Optional<UserAccount> userOpt = userRepo.findByUsername(loginRequest.getUsername());
-    //     if (userOpt.isEmpty()) {
-    //         return ResponseEntity.badRequest().body("Invalid credentials");
-    //     }
-    //     UserAccount user = userOpt.get();
-    //     String token = jwtTokenProvider.generateToken(authToken, user);
-    //     return ResponseEntity.ok(token);
-    // }
 }
