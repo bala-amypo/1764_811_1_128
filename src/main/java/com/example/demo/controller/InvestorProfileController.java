@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.InvestorProfile;
-// import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.service.impl.InvestorProfileServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
