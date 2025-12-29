@@ -13,15 +13,12 @@ public interface HoldingRecordRepository extends JpaRepository<HoldingRecord, Lo
 
     List<HoldingRecord> findByInvestorId(Long investorId);
 
-    // Satisfies Test Priority 66 & Runtime Query Creation
     @Query("SELECT h FROM HoldingRecord h WHERE h.investorId = :investorId AND h.assetClass = :assetClass")
     List<HoldingRecord> findByInvestorAndAssetClass(@Param("investorId") Long investorId, 
                                                     @Param("assetClass") AssetClassType assetClass);
 
-    // Satisfies Test Priority 64, 65 & Runtime Query Creation
     @Query("SELECT h FROM HoldingRecord h WHERE h.currentValue > :val")
     List<HoldingRecord> findByValueGreaterThan(@Param("val") Double val);
 
-    // Standard naming convention for internal service use
     List<HoldingRecord> findByInvestorIdAndAssetClass(Long investorId, AssetClassType assetClass);
 }
