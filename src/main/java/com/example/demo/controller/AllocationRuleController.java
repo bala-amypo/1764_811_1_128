@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.AssetClassAllocationRule;
-// import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.service.impl.AllocationRuleServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

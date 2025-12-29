@@ -1,8 +1,8 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.HoldingRecord;
-import com.example.demo.entity.enums.AssetClassType; // Added missing import
-import com.example.demo.service.HoldingRecordService; // Injecting Interface
+import com.example.demo.entity.enums.AssetClassType; 
+import com.example.demo.service.HoldingRecordService; 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -12,7 +12,6 @@ import java.util.Optional;
 @RequestMapping("/api/holdings")
 public class HoldingRecordController {
 
-    // Best Practice: Use the interface 'HoldingRecordService' for injection
     private final HoldingRecordService holdingRecordService;
 
     public HoldingRecordController(HoldingRecordService holdingRecordService) {

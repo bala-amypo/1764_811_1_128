@@ -10,18 +10,16 @@ public class JwtTokenProvider {
 
     private final JwtUtil jwtUtil;
 
-    // Constructor for your test
     public JwtTokenProvider(String secret, long validityInMs) {
         this.jwtUtil = new JwtUtil(secret, validityInMs);
     }
 
-    // Default constructor for Spring Autowiring
     public JwtTokenProvider() {
         this.jwtUtil = new JwtUtil();
     }
 
     public String generateToken(Authentication authentication, UserAccount user) {
-        // Using authentication name as subject
+        
         return jwtUtil.generateToken(authentication.getName());
     }
 
