@@ -52,6 +52,6 @@ public class AllocationRuleServiceImpl implements AllocationRuleService {
 
     @Override
     public List<AssetClassAllocationRule> getAllRules() {
-        return repository.findAll(); // <-- added implementation
+        return repository.findAll(); 
     }
 }

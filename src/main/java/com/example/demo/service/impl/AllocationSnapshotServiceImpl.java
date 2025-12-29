@@ -45,7 +45,6 @@ public class AllocationSnapshotServiceImpl implements AllocationSnapshotService 
             throw new IllegalArgumentException("Total portfolio value must be > 0");
         }
 
-        // Compute allocation percentages
         StringBuilder allocationJson = new StringBuilder("{");
         for (HoldingRecord h : holdings) {
             double pct = (h.getCurrentValue() / totalValue) * 100;
@@ -56,7 +55,6 @@ public class AllocationSnapshotServiceImpl implements AllocationSnapshotService 
         }
         allocationJson.append("}");
 
-        // Create snapshot record
         AllocationSnapshotRecord snapshot = new AllocationSnapshotRecord(
                 investorId,
                 LocalDateTime.now(),
@@ -65,7 +63,6 @@ public class AllocationSnapshotServiceImpl implements AllocationSnapshotService 
         );
         snapshot = snapshotRepository.save(snapshot);
 
-        // Compare with active rules and generate alerts
         List<AssetClassAllocationRule> rules = allocationRuleRepository.findByInvestorIdAndActiveTrue(investorId);
         for (AssetClassAllocationRule rule : rules) {
             holdings.stream()

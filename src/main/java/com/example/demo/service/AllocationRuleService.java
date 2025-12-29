@@ -17,5 +17,5 @@ public interface AllocationRuleService {
 
     AssetClassAllocationRule getRuleById(Long id) throws ResourceNotFoundException;
 
-    List<AssetClassAllocationRule> getAllRules(); // <-- add this
+    List<AssetClassAllocationRule> getAllRules(); 
 }
